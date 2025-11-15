@@ -1,0 +1,165 @@
+import re
+def main():
+    surname, name, patronymic, age, phone_number = data_visitor()
+    hello_visitor(surname, name, patronymic, phone_number)
+    menu(age)
+    order(age)
+    order_visitor = payment()
+    payment(order_visitor)
+
+# 1 пользователь вводит свои данные ФИО и возраст
+def data_visitor() -> (str, str, str, int, str):
+    surname = input("Введите вашу фамилию: ")
+    while surname == surname.lower() or surname.find(" ") != -1:
+        print("Неправильное фамилия")
+        surname = input("Введите вашу фамилию: ")
+
+    name = input("Введите ваше имя: ")
+    while name == name.lower() or name.find(" ") != -1:
+        print("Неправильное имя")
+        name = input("Введите ваше имя: ")
+
+    patronymic = input("Введите ваше отчество: ")
+    while patronymic == patronymic.lower() or patronymic.find(" ") != -1:
+        print("Неправильное отчество")
+        patronymic = input("Введите ваше отчество: ")
+
+    age = int(input("Введите ваш возраст: "))
+    while age > 120 or age < 1 or age == int:
+        print("Неправильный возраст")
+        age = int(input("Введите ваш возраст: "))
+
+    phone_number = input("Введите ваш номер телефона: +7 ")
+    while phone_number != re.search(r'\d\d\d\D\d\d\d\D\d\d\D\d\d', r' 123-456-78-90 '):
+        print("Неправильный номер телефона!")
+        phone_number = int(input("Введите ваш номер телефона: +7 "))
+
+    return surname, name, patronymic, age, phone_number
+
+#2 пользователя приветствуют и показывают меню, если пользователь
+# старше 18 лет то ему показывают взрослое меню с увеличенными порциями
+def hello_visitor(surname: str, name: str, patronymic: str, phone_number: str) -> print():
+    print(f"Здравствуйте, {surname} {name} {patronymic}! "
+          f"Добро пожаловать в пиццерию Эль-Аркадио!\n "
+          f"Ваш номер телефона +7 {phone_number} будет использован для"
+          f"нашего приложения //Эль-Аркадио-ВПЕРЁД//")
+
+def menu(age):
+    pepperoni = 370
+    mushroom = 375
+    custom = 470
+    water = 70
+    apple_juice = 200
+    soda = 250
+
+    if age < 18:
+        print("Вот ваше меню - \n",
+              "----------Пицца-----------\n"
+              f"1. Пицца пепперони  {pepperoni}р / 400г\n"
+              f"2. Пицца грибная  {mushroom}р / 400г\n"
+              f"3. КАСТОМНАЯ ПИЦЦА {custom}р / 400г\n",
+              "----------Напитки----------\n"
+              f"4. Вода  {water}р / 250мл\n"
+              f"5.1 Яблочный сок  {apple_juice}р / 250мл\n")
+
+    else:
+        print("Вот ваше меню - \n",
+              "----------Пицца-----------\n"
+              f"1. Пицца пепперони  {pepperoni + 200}р / 650г\n"
+              f"2. Пицца грибная  {mushroom + 200}р / 650г\n"
+              f"3. КАСТОМНАЯ ПИЦЦА {custom + 200}р / 650г\n",
+              "----------Напитки----------\n"
+              f"4. Вода  {water + 30}р / 750мл\n"
+              f"5.2 Газировка  {soda} / 750мл\n")
+
+
+#3 Пользователь выбирает готовые варианты пицц, и напитки,
+# либо выбирает кастомную пиццу с вариантами начинок.
+def order(age):
+    order_visitor1 = input("Выберите 1-ый товар: ")
+    order_visitor2 = input("Выберите 2-ой товар: ")
+    order_visitor = order_visitor1 or order_visitor2
+
+    while (order_visitor != "1" or order_visitor != "2" or order_visitor != "3" or order_visitor != "4" or
+           order_visitor != "5.1" or order_visitor != "5.2"):
+        print("Такого товара нет! ")
+        order_visitor1 = input("Выберите 1-ый товар: ")
+        order_visitor2 = input("Выберите 2-ой товар: ")
+
+    if order_visitor1 or order_visitor2 == "КАСТОМНАЯ ПИЦЦА":
+        filling_pizza = input("Выберите начинку - \n"
+                              "1. 99 сыров \n"
+                              "2. ананасы \n"
+                              "3. оливки \n: ")
+
+        while filling_pizza != "1" or filling_pizza != "2" or filling_pizza != "3":
+            print("Такой начинки нет")
+            filling_pizza = input("Выберите начинку - \n"
+                                  "1. 99 сыров \n"
+                                  "2. ананасы \n"
+                                  "3. оливки \n: ")
+
+print(f"Вы выбрали Пиццу с начинкой {filling_pizza}")
+            print(f"Вы выбрали {order_visitor1} и {order_visitor2}")
+
+    else:
+        print(f"Вы выбрали {order_visitor1} и {order_visitor2}")
+
+# 4 Пользователю выдается чек с перечислением всех позиций и итоговой суммой
+    pepperoni = 370
+    mushroom = 375
+    custom = 470
+    water = 70
+    apple_juice = 200
+    soda = 250
+
+    children_price_pizzas = pepperoni, mushroom, custom
+    children_price_drinks = water, apple_juice
+    adult_price_pizza = pepperoni + 200, mushroom +200, custom + 200
+    adult_price_drinks = water + 30, soda
+
+    if age < 18:
+        order_visitor = (f"Пицца пепперони" or "Пицца грибная" or "КАСТОМНАЯ ПИЦЦА" == {children_price_pizzas},
+                         f"Вода" or "Яблочный сок" == {children_price_drinks} )
+    else:
+        order_visitor = (f"Пицца пепперони" or "Пицца грибная" or "КАСТОМНАЯ ПИЦЦА" == {adult_price_pizza},
+                         f"Вода" or "Газировка" == {adult_price_drinks})
+
+    cheque = lambda n: n + n
+
+    print(f"----------------------------------- \n"
+          f"--------------- ЧЕК --------------- \n"
+          f"----------------------------------- \n"
+          f"Вы заказали {order_visitor} \n"
+          f"----------------------------------- \n"
+          f"Итоговая сумма {cheque(order_visitor)} \n"
+          f"-----------------------------------")
+
+    return age
+
+# 5 Пользователь выбирает оплату оплата картой (в этом случае сдача не выдаётся)
+# или наличкой(рассчитать сдачу).
+def payment(order_visitor):
+    your_balance = int(input("Введите сколько у вас  денег (от 1350 до 5000): "))
+    while your_balance > 5000 or your_balance < 1350:
+        if your_balance > 5000:
+            print("Слишком много для пиццерии")
+
+        else:
+            print("Маловато для пиццерии")
+        your_balance = int(input("Введите сколько у вас  денег (от 1350 до 5000): "))
+
+    choice_payment = input("Выберите способ оплаты - \n"
+                           f"1. Картой \n"
+                           f"2. Наличкой \n: ")
+    while choice_payment != "1" or choice_payment != "2":
+        print("Такого способа оплаты нет...")
+        choice_payment = input("Выберите способ оплаты - \n"
+                               f"1. Картой \n"
+                               f"2. Наличкой \n: ")
+
+    if choice_payment == "1":
+        cheque = lambda n: n + n
+        print(f"Сдача: {your_balance - cheque(order_visitor)}")
+
+main()
