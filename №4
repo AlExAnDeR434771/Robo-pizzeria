@@ -1,0 +1,215 @@
+import re
+def choose(input_func):
+    def output_func():
+        print("="*50)
+        input_func()
+        print("=" *50)
+    return output_func
+phone_pattern=re.compile(r'^(\+7|7|8)?[\s\-]?\(?[489][0-9]{2}\)?[\s\-]?[0-9]{3}[\s\-]?[0-9]{2}[\s\-]?[0-9]{2}$')
+email_patter=re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+
+data_visitor = {}
+order_visitor = []
+total_amount = 0
+current_menu = {}
+
+
+
+while True:
+    FIO=input("Введите ваше имя, фамилию, отчество: ")
+    pattern =re.compile(r"^[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)*\s+[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)*\s+[А-ЯЁ][а-яё]+(?:-[А-ЯЁ][а-яё]+)*$")
+    if pattern.match(FIO):
+        print("Введите ваше имя, фамилию, отчество ")
+        data_visitor['имя, фамилию, отчество'] =FIO
+        break
+    else:
+        print("Неправильное имя, фамилия, отчество! ")
+
+while True:
+    try:
+        age = int(input("Введите ваш возраст: "))
+        if age > 0 and age < 120:
+            data_visitor['возраст'] = age
+            break
+        else:
+            print("Неправильный возраст! ")
+
+
+while True:
+    try:
+
+        while True:
+            phone = input("Введите ваш номер телефона: +7")
+            if phone_pattern.match(phone):
+                data_visitor['телефон'] = phone
+                break
+            else:
+                print("Неправильный номер телефона")
+        while True:
+            email_user = input("введите почту\n")
+            if email_patter.match(email_user):
+                data_visitor['email'] = email_user
+                break
+            else:
+                print("Неправильная почта")
+print("Добро пожаловать в пиццерию Эль-Аркадио!\n"
+      "Вас приветствует робот-помощник Эль-Трафимо!")
+
+if data_visitor['возраст'] >= 18:
+    print("Вам доступно взрослое меню с увеличенными порциями!")
+    current_menu = adult_menu
+
+
+adult_menu = {
+          "----------Пицца-----------\n"
+          f"1. Пицца пепперони  {370}р / 400г\n"
+          f"2. Пицца грибная  {375}р / 400г\n"
+          f"3. КАСТОМНАЯ ПИЦЦА {470}р / 400г\n"}
+
+drinks={
+    "вода": 100,
+    "сок яблочный": 250,
+    "кола":299,
+    "спрайт":299,
+    "фанта":299
+}
+
+topping={
+    '99 сыров':50,
+    'оливки':40,
+    'ананасы':80
+}
+
+else:
+    print("Вам доступно стандартное меню.")
+    current_menu = our_menu
+
+print("\nНАШЕ МЕНЮ")
+print("\nПИЦЦЫ")
+for pizza, price in current_menu.items():
+    print(f"{pizza} : {price['цена']}")
+
+print("\nНАПИТКИ")
+for drink, price in drinks.items():
+    print(f"{drink}: {price} руб")
+
+
+print("\n=== МЕНЮ ===")
+
+while True:
+    print("\n1 - Выбрать готовую пиццу")
+    print("2 - Создать кастомную пиццу")
+    print("3 - Выбрать напиток")
+    print("4 - Завершить заказ")
+
+    choice = input("Выберите что хотите сделать\n")
+
+    if choice == '1':
+        print("\n=== ВЫБОР ПИЦЦЫ ===")
+        for pizza, price in current_menu.items():
+            print(f"{pizza} : {price['описание']} : {price['цена']}")
+        user_pizza=input("выберите себе пиццу: ")
+        if user_pizza in current_menu.keys():
+            print("выша пицца добавлена")
+            total_amount +=current_menu[user_pizza]['цена']
+        else:
+            print("Пицца не добавлена")
+        order_visitor.append({
+            "пицца":user_pizza,
+            "цена":current_menu[user_pizza]['цена'],
+            "тип":"пицца"
+        })
+
+    elif choice == '2':
+        print("\n=== СОЗДАНИЕ КАСТОМНОЙ ПИЦЦЫ ===")
+        base_price = 400
+        custom_price = base_price
+        chooseed_toppings = []
+
+        print("Доступные начинки:")
+        for toppin, price in topping.items():
+            print(f"{toppin}: +{price} руб.")
+
+        print(f"\nБазовая цена пиццы: {base_price} руб.")
+
+        while True:
+            print(f"\nТекущий состав: {', '.join(chooseed_toppings) if chooseed_toppings else 'нет начинок'}")
+            print(f"Текущая цена: {custom_price} руб.")
+
+            action = input("\nВведите:\n- название начинки чтобы добавить\n- 'готово' для завершения: ").lower()
+
+            if action == 'готово':
+                if not chooseed_toppings:
+                    print("Вы не добавили ни
+
+одной начинки! Создаем базовую пиццу.")
+                break
+            elif action in topping:
+                if action not in chooseed_toppings:
+                    chooseed_toppings.append(action)
+                    custom_price+=topping[action]
+                    print(f"Добавили: {action}")
+                else:
+                    print(f"Начинка '{action}' уже добавлена")
+            else:
+                print("Неизвестная команда или начинка")
+
+        pizza_name = "Кастомная пицца"
+        if chooseed_toppings:
+            pizza_name += f" ({', '.join(chooseed_toppings)})"
+
+        order_visitor.append({
+            'название': pizza_name,
+            'цена': custom_price,
+            'тип': 'пицца'
+        })
+        total_amount += custom_price
+        print(f"\nКастомная пицца добавлена в заказ!")
+    elif choice == '3':
+        print("\n--- НАПИТКИ ---")
+        for drink,price in drinks.items():
+            print(f"{drink} : {price}")
+        try:
+            print("\n--- НАПИТКИ ---")
+            drink_choice = input("\nВыберите напиток: \n")
+            if drink_choice in drinks:
+                total_amount += drinks[drink_choice]
+                print("ваш напиток добавлен")
+                order_visitor.append({
+                    "название": drink_choice,
+                    "цена": drinks[drink_choice],
+                    "тип": "напитки"
+                })
+
+        except ValueError:
+            print("введите нормальное имя напитка")
+    elif choice == '4':
+        if not order_visitor:
+            print("Ваш заказ пуст! Добавьте что-нибудь.")
+        else:
+            break
+    else:
+        print("Неверный выбор!")
+
+@choose
+def chek():
+    print("ВАШ ЧЕК")
+for i, item in enumerate(order_visitor, 1):
+    print(f"{i}. {item['название']}: {item['цена']} руб.")
+@choose
+def result_finish():
+    print(f"ИТОГО:  {total_amount} руб.")
+result_finish()
+
+
+print("\n=== ОПЛАТА ===")
+
+while True:
+    print("1- заказ собой")
+    print("2- здесь")
+    try:
+        issuing_an_order_visitor = int(input())
+        if issuing_an_order_visitor == 1:
+            print("ваш заказ приготовиться и мы вам его принесем")
+        else:
+            print("подождите заказ и пока-что сядьте")
